@@ -226,3 +226,408 @@ On GitHub, open a Pull Request from `your-fork:firstname_studentid` → `Joeboy7
 - React Navigation: https://reactnavigation.org/docs/getting-started
 - Expo Router: https://docs.expo.dev/router/introduction/
 
+touch screens/WelcomeScreen.js
+touch screens/EditProfileScreen.js
+touch screens/AnnouncementsScreen.js
+touch screens/AboutScreen.js
+touch screens/HelpScreen.js
+touch screens/CoursesScreen.js
+touch screens/TimetableScreen.js
+touch screens/ProfileScreen.js
+touch screens/FeedScreen.js
+touch screens/EventDetailsScreen.js
+touch navigation/RootStack.js
+touch navigation/DrawerNavigator.js
+touch navigation/TabNavigator.js
+touch navigation/HomeStack.js
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import RootStack from './navigation/RootStack';
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <RootStack />
+    </NavigationContainer>
+  );
+}
+import React from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+
+export default function WelcomeScreen({ navigation }) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Campus Connect</Text>
+      <Text style={styles.subtitle}>Your UG student companion</Text>
+      <Button 
+        title="Get Started" 
+        onPress={() => navigation.navigate('Main')}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    marginBottom: 30,
+  },
+});
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+
+export default function EditProfileScreen({ navigation, route }) {
+  const { profile, setProfile } = route.params;
+  const [name, setName] = useState(profile.name);
+  const [bio, setBio] = useState(profile.bio);
+  const [programme, setProgramme] = useState(profile.programme);
+
+  const handleSave = () => {
+    const updatedProfile = { ...profile, name, bio, programme };
+    setProfile(updatedProfile);
+    navigation.goBack();
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Edit Profile</Text>
+      <TextInput 
+        style={styles.input} 
+        value={name} 
+        onChangeText={setName} 
+        placeholder="Name"
+      />
+      <TextInput 
+        style={styles.input} 
+        value={bio} 
+        onChangeText={setBio} 
+        placeholder="Bio"
+      />
+      <TextInput 
+        style={styles.input} 
+        value={programme} 
+        onChangeText={setProgramme} 
+        placeholder="Programme"
+      />
+      <Button title="Save" onPress={handleSave} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
+  input: { 
+    borderWidth: 1, 
+    borderColor: '#ccc', 
+    padding: 10, 
+    marginVertical: 10,
+    borderRadius: 5
+  }
+});
+import React from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+
+const announcements = [
+  { id: '1', title: 'Library Hours Extended', date: '2026-07-26', text: 'Library will remain open until midnight during exams' },
+  { id: '2', title: 'New Course Registration', date: '2026-07-25', text: 'Registration for next semester opens August 1st' },
+  { id: '3', title: 'Scholarship Deadline', date: '2026-07-24', text: 'Apply for the UG Excellence Scholarship by August 15' },
+  { id: '4', title: 'IT Maintenance', date: '2026-07-23', text: 'Student portal will be down this weekend for maintenance' },
+  { id: '5', title: 'Guest Lecture Series', date: '2026-07-22', text: 'Prof. Mensah from MIT will speak on AI this Friday' },
+];
+
+export default function AnnouncementsScreen() {
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={announcements}
+        renderItem={({item}) => (
+          <View style={styles.item}>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.date}>{item.date}</Text>
+            <Text>{item.text}</Text>
+          </View>
+        )}
+        keyExtractor={item => item.id}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  item: { padding: 15, borderBottomWidth: 1, borderBottomColor: '#eee' },
+  title: { fontSize: 16, fontWeight: 'bold' },
+  date: { fontSize: 12, color: '#666', marginVertical: 5 }
+});
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+
+export default function AboutScreen() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Campus Connect</Text>
+      <Text style={styles.description}>Your all-in-one student companion app for UG</Text>
+      <Text style={styles.info}>Developed by: Henry Ahenkorah</Text>
+      <Text style={styles.info}>Student ID: 22198084</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20, justifyContent: 'center' },
+  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 10 },
+  description: { fontSize: 16, marginBottom: 30 },
+  info: { fontSize: 16, marginVertical: 5 }
+});
+import React from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+
+const faqs = [
+  { id: '1', question: 'How do I reset my password?', answer: 'Go to the login page and click "Forgot Password"' },
+  { id: '2', question: 'How do I register for courses?', answer: 'Navigate to the Courses tab and click "Register"' },
+  { id: '3', question: 'Where can I find my exam timetable?', answer: 'Check the Timetable section in the main dashboard' },
+];
+
+export default function HelpScreen() {
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={faqs}
+        renderItem={({item}) => (
+          <View style={styles.item}>
+            <Text style={styles.question}>Q: {item.question}</Text>
+            <Text style={styles.answer}>A: {item.answer}</Text>
+          </View>
+        )}
+        keyExtractor={item => item.id}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  item: { padding: 15, borderBottomWidth: 1, borderBottomColor: '#eee' },
+  question: { fontWeight: 'bold', marginBottom: 5 },
+  answer: { paddingLeft: 10 }
+});
+import React from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+
+const courses = [
+  { id: '1', code: 'DCIT301', title: 'Data Structures', credits: 3 },
+  { id: '2', code: 'DCIT302', title: 'Algorithms', credits: 3 },
+  { id: '3', code: 'DCIT303', title: 'Database Systems', credits: 3 },
+  { id: '4', code: 'DCIT304', title: 'Software Engineering', credits: 3 },
+  { id: '5', code: 'DCIT305', title: 'Computer Networks', credits: 3 },
+];
+
+export default function CoursesScreen() {
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={courses}
+        renderItem={({item}) => (
+          <View style={styles.item}>
+            <Text style={styles.code}>{item.code}</Text>
+            <Text>{item.title}</Text>
+            <Text style={styles.credits}>{item.credits} credits</Text>
+          </View>
+        )}
+        keyExtractor={item => item.id}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  item: { padding: 15, borderBottomWidth: 1, borderBottomColor: '#eee' },
+  code: { fontWeight: 'bold' },
+  credits: { color: '#666' }
+});
+import React, { useState } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+
+export default function ProfileScreen({ navigation, route }) {
+  const [profile, setProfile] = useState({
+    name: 'Henry Ahenkorah',
+    indexNumber: '22198084',
+    programme: 'Computer Science',
+    level: 'Level 300',
+    bio: 'Student at UG'
+  });
+
+  React.useEffect(() => {
+    if (route.params?.updatedProfile) {
+      setProfile(route.params.updatedProfile);
+    }
+  }, [route.params?.updatedProfile]);
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.label}>Name: {profile.name}</Text>
+      <Text style={styles.label}>Index: {profile.indexNumber}</Text>
+      <Text style={styles.label}>Programme: {profile.programme}</Text>
+      <Text style={styles.label}>Level: {profile.level}</Text>
+      <Text style={styles.label}>Bio: {profile.bio}</Text>
+      <Button 
+        title="Edit Profile" 
+        onPress={() => navigation.navigate('EditProfile', { profile, setProfile })}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20, justifyContent: 'center' },
+  label: { fontSize: 18, marginBottom: 10 }
+});
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+
+const events = [
+  { id: '1', title: 'Career Fair', date: '2026-08-15', description: 'Meet employers from top tech companies' },
+  { id: '2', title: 'Research Symposium', date: '2026-08-20', description: 'Present your research findings' },
+  { id: '3', title: 'Sports Day', date: '2026-08-25', description: 'Annual inter-departmental sports' },
+  { id: '4', title: 'Hackathon', date: '2026-09-01', description: '48-hour coding competition' },
+  { id: '5', title: 'Cultural Festival', date: '2026-09-10', description: 'Music, dance, and food fair' },
+];
+
+export default function FeedScreen({ navigation }) {
+  const renderItem = ({ item }) => (
+    <TouchableOpacity 
+      style={styles.item}
+      onPress={() => navigation.navigate('EventDetails', { event: item })}
+    >
+      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.date}>{item.date}</Text>
+    </TouchableOpacity>
+  );
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={events}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  item: { 
+    padding: 15, 
+    borderBottomWidth: 1, 
+    borderBottomColor: '#eee' 
+  },
+  title: { fontSize: 16, fontWeight: 'bold' },
+  date: { fontSize: 14, color: '#666' }
+});
+import React from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+
+export default function EventDetailsScreen({ navigation, route }) {
+  const { event } = route.params;
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>{event.title}</Text>
+      <Text style={styles.date}>{event.date}</Text>
+      <Text style={styles.description}>{event.description}</Text>
+      <Button title="Back" onPress={() => navigation.goBack()} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20 },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+  date: { fontSize: 16, color: '#666', marginBottom: 15 },
+  description: { fontSize: 16, marginBottom: 30 }
+});
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import WelcomeScreen from '../screens/WelcomeScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
+import DrawerNavigator from './DrawerNavigator';
+
+const Stack = createNativeStackNavigator();
+
+export default function RootStack() {
+  return (
+    <Stack.Navigator initialRouteName="Welcome">
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
+      <Stack.Screen name="Main" component={DrawerNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+    </Stack.Navigator>
+  );
+}
+import React from 'react';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import TabNavigator from './TabNavigator';
+import AnnouncementsScreen from '../screens/AnnouncementsScreen';
+import AboutScreen from '../screens/AboutScreen';
+import HelpScreen from '../screens/HelpScreen';
+
+const Drawer = createDrawerNavigator();
+
+export default function DrawerNavigator() {
+  return (
+    <Drawer.Navigator initialRouteName="Dashboard">
+      <Drawer.Screen name="Dashboard" component={TabNavigator} />
+      <Drawer.Screen name="Announcements" component={AnnouncementsScreen} />
+      <Drawer.Screen name="About" component={AboutScreen} />
+      <Drawer.Screen name="Help & Support" component={HelpScreen} />
+    </Drawer.Navigator>
+  );
+}
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import HomeStack from './HomeStack';
+import CoursesScreen from '../screens/CoursesScreen';
+import TimetableScreen from '../screens/TimetableScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+
+const Tab = createBottomTabNavigator();
+
+export default function TabNavigator() {
+  return (
+    <Tab.Navigator initialRouteName="Home">
+      <Tab.Screen name="Home" component={HomeStack} />
+      <Tab.Screen name="Courses" component={CoursesScreen} />
+      <Tab.Screen name="Timetable" component={TimetableScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
+  );
+}
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import FeedScreen from '../screens/FeedScreen';
+import EventDetailsScreen from '../screens/EventDetailsScreen';
+
+const Stack = createNativeStackNavigator();
+
+export default function HomeStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Feed" component={FeedScreen} />
+      <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
+    </Stack.Navigator>
+  );
+}
+
